@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
 
-    <title>Implantación de aplicaciones web en contenedores</title>
+    <title>Kubernetes</title>
 
     <link rel="stylesheet" href="reveal.js/dist/reset.css" />
     <link rel="stylesheet" href="reveal.js/dist/reveal.css" />
@@ -17,7 +17,7 @@
     <link
       rel="stylesheet"
       href="reveal.js/plugin/highlight/monokai.css"
-      id="highlight-theme"
+      id="dark-theme"
     />
   </head>
   <body>
@@ -29,12 +29,14 @@
           data-separator-vertical="---"
         >
           <textarea data-template># Implantación de aplicaciones web
+            
+            ---
 
 El protocolo http, o su extensión https, ha ido convirtiéndose poco a
 poco en el "superprotocolo" de Internet y ha ido desplazando
 paulatinamente el uso de otros protocolos.
             
-            -----
+            ---
 
 De igual forma, la mayor
 parte del software que se consume hoy en día se podría denominar de
@@ -42,14 +44,14 @@ forma genérica como aplicación web, aunque hay diferencias
 importantes sobre la forma de presentarse, ya que no es lo mismo que una persona acceda a una aplicación a través de un navegador, a través
 de una aplicación móvil o que quien acceda a la aplicación sea una
 máquina.
-            -----
+            ---
 
 En este curso no podemos entrar en detalle sobre las
 características de estas aplicaciones web, pero sí en las
 características que deben tener los sistemas que las ofrecen para que
 cumplan con los requisitos esperados.
             
-            -----
+            ---
 
 ## Requisitos habituales de las aplicaciones web
             
@@ -63,7 +65,7 @@ funcione de forma adecuada, porque ni el uso de la aplicación se
 dispara en unos instantes, ni el número de empleados de una empresa
 varía de forma abrupta.
             
-            -----
+            ---
 
 Por otra parte, las actualizaciones se pueden
 hacer en momentos en los que el uso es mínimo y, si es necesario una
@@ -76,7 +78,7 @@ informática tradicional, también tiene un impacto importante en la
 forma de desarrollar las aplicaciones que funcionan bajo este
 esquema.
             
-            -----
+            ---
 
 Por otra parte, una aplicación web que esté disponible en Internet,
 tiene miles de millones de potenciales usuarios, que la pueden usar
@@ -85,7 +87,7 @@ consecuencias muy importantes, ya que es muy difícil determinar los
 recursos necesarios para prestar servicios a una demanda muy variable
 e idealmente, el servicio no puede interrumpirse nunca.
             
-            -----
+            ---
 
 Pero, ¿estocómo se hace?. ¿Es posible que el mismo sistema se ajuste a una demanda
 que puede variar de un usuario a un millón?, ¿es posible tener un
@@ -94,7 +96,7 @@ aplican las actualizaciones de software?, ¿poco a poco o con grandes
 saltos?. Durante este curso, veremos que precisamente esto es lo que
 trata de proporcionar Kubernetes.
             
-            -----
+            ---
 
 ## Componentes auxiliares de un servicio web
             
@@ -108,7 +110,7 @@ vamos a ir viendo paso a paso la forma de ir incluyendo diferentes
 componentes auxiliares y cómo esta inclusión va a ir cambiando la arquitectura de los
 sistemas que proporcionan el servicio.
             
-            -----
+            ---
 
 ### Paso 1. Punto de partida
             
@@ -123,13 +125,13 @@ https://example.com/app2
 
 https://example.com/app3
             
-            -----
+            ---
 
 Estas aplicaciones pueden estar desarrolladas en el mismo lenguaje o en varios diferentes (Python, Java, PHP, etc.), pueden utilizar una base
 de datos, almacenamiento auxiliar y como se sirven a través de https,
 es necesario gestionar los certificados x509.
             
-            -----
+            ---
 
 El esquema inicial que pensaríamos para proporcionar estas tres
 aplicaciones sería una máquina (física o virtual) en la que
@@ -138,9 +140,11 @@ java, ...), el servidor de bases de datos, etc... tal y como aparece en la sigui
 
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso1.png" alt="paso1" />
             
-            -----
+            ---
 
-### Paso 2. Servidor de bases de datos separado
+### Paso 2. Servidor de bases de datos separado o independiente
+            
+            ---
 
 Desde un punto de vista de seguridad, ubicar el servidor de bases de
 datos en el mismo equipo que el servidor web es totalmente inadecuado,
@@ -153,8 +157,12 @@ que no haya interacciones entre ellos y no compitan por los mismos
 recursos.
 
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso2.png" alt="paso2" />
+            
+            ---
 
 ### Paso 3. Servidores de aplicaciones en equipos separados
+            
+            ---
 
 El coste computacional mayor en una aplicación web suele recaer en los
 servidores de aplicaciones, que son los que ejecutan código complejo, mientras que el servidor web se limita a servir el contenido generado
@@ -169,8 +177,12 @@ pasa la petición web a un equipo interno (el servidor de
 aplicaciones).
 
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso3.png" alt="paso3" />
+            
+            ---
 
 ### Paso 4. Caché SQL
+            
+            ---
 
 Los servidores de aplicaciones consultan continuamente a los
 servidores de bases de datos y cada consulta conlleva un importante
@@ -186,8 +198,12 @@ opciones muy utilizadas como caché SQL.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso4.png"
 alt="paso4" />
+            
+            ---
 
 ### Paso 5. Caché HTTP
+            
+            ---
 
 Al igual que se puede cachear la respuesta del servidor de bases de
 datos, se puede hacer lo mismo con la del servidor de aplicaciones o
@@ -200,8 +216,12 @@ caché http es varnish.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso5.png"
 alt="paso5" />
+            
+            ---
 
 ### Paso 6. Varios servidores de aplicaciones
+            
+            ---
 
 Si la demanda de alguna de las aplicaciones varía de forma importante,
 se puede utilizar escalado horizontal, aumentando el número de nodos
@@ -211,12 +231,17 @@ servidores de aplicación de la misma aplicación tiene que estar
 distribuido de forma que garantice el uso concurrente y se deben
 repartir las peticiones a los diferentes servidores de aplicación a
 través de un balanceador de carga.
+            
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso6.png"
 alt="paso6" />
+            
+            ---
 
 ### Paso 7. Alta disponibilidad en el resto de componentes
+            
+            ---
 
 No solo se pueden escalar horizontalmente los servidores de
 aplicaciones, sino que si queremos ofrecer realmente alta
@@ -227,27 +252,37 @@ pueda responder siempre ante incidencias puntuales en cualquier nivel.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso7.png"
 alt="paso7" />
+            
+            ---
 
 
 ### Paso 8. Microservicios y aplicaciones "tradicionales"
+            
+            ---
 
 Una de las opciones que se considera más adecuada hoy en día para el
 desarrollo y puesta en producción de aplicaciones web es la utilización de microservicios. Con este enfoque los propios componentes de la aplicación se
 separan en múltiples componentes que se ejecutan en nodos
 independientes (típicamente contenedores) y se comunican unos con
-otros a través de servicios en red que ofrecen al resto. 
+otros a través de servicios en red que ofrecen al resto.
+            
+            ---
 
-Estos
-microservicios no solo incluirían de forma independiente los
+Estos microservicios no solo incluirían de forma independiente los
 componentes que hemos explicado hasta ahora, sino que principalmente
 se refiere a la separación de los componentes internos de la
 aplicación en diferentes microservicios.
+           
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso8.png"
 alt="paso8" />
+            
+            ---
 
 ### Paso 9. Escalabilidad en los microservicios
+            
+            ---
 
 Al ofrecer microservicios no podemos tener dependencia de un solo
 nodo, por lo que al igual que en los pasos anteriores, se debe ofrecer
@@ -257,6 +292,8 @@ sistema globalmente pueda responder ante cualquier error puntual.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso9.png"
 alt="paso9" />
+            
+            ---
 
 ### Paso 10. Microservicios en todas las aplicaciones
 
@@ -267,6 +304,8 @@ gestionados aparte.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso10.png"
 alt="paso10" />
+            
+            ---
 
 ### Paso 11. Todo en microservicios
 
@@ -276,6 +315,8 @@ los componentes de cada aplicación, como los componentes auxiliares.
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso11.png"
 alt="paso11" />
+            
+            ---
 
 ## Contenedores
 
@@ -285,13 +326,22 @@ despliegue, muchos de los componentes que hemos presentado se
 ejecutan no sobre máquinas virtuales o físicas, sino que lo hacen
 sobre contenedores de aplicaciones tipo docker (hoy en día se plantean
 otras alternativas como podman o containerd, pero no vamos a entrar en
-esa explicación). Docker es capaz de gestionar esos contenedores de
+esa explicación). 
+            
+            ---     
+            
+            
+Docker es capaz de gestionar esos contenedores de
 forma ágil y rápida, pero no tiene funcionalidad para ejecutar
 escenarios tan complejos como los anteriores, que además se
 ejecutarían lógicamente en diferentes nodos físicos o virtuales (que a
 su vez ejecutarían docker para los componentes de la aplicación).
+            
+            ---
 
 ## Conclusión
+            
+            ---
 
 Esto no son más que un conjunto de componentes y una explicación muy
 rápida de ellos, el orden y la ubicación de ellos es variable en
