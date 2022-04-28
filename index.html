@@ -16,8 +16,8 @@
     <!-- Theme used for syntax highlighted code -->
     <link
       rel="stylesheet"
-      href="reveal.js/plugin/highlight/monokai.css"
-      id="dark-theme"
+      href="reveal.js/plugin/highlight/black.css"
+      id="black-theme"
     />
   </head>
   <body>
@@ -70,7 +70,11 @@ varía de forma abrupta.
 Por otra parte, las actualizaciones se pueden
 hacer en momentos en los que el uso es mínimo y, si es necesario una
 interrupción del servicio, se puede programar para un momento
-determinado en que tenga muy poco impacto. Las aplicaciones de este
+determinado en que tenga muy poco impacto. 
+            
+            ---
+            
+            Las aplicaciones de este
 tipo no se suelen modificar habitualmente, sino que lo hacen de forma
 bastante espaciada en el tiempo, por lo que los cambios entre una
 versión y otra son significativos. Esto, que podríamos llamar
@@ -89,7 +93,11 @@ e idealmente, el servicio no puede interrumpirse nunca.
             
             ---
 
-Pero, ¿estocómo se hace?. ¿Es posible que el mismo sistema se ajuste a una demanda
+Pero, ¿estocómo se hace?.
+            
+            ---
+            
+¿Es posible que el mismo sistema se ajuste a una demanda
 que puede variar de un usuario a un millón?, ¿es posible tener un
 sistema siempre actualizado y que a la vez no se pare?, ¿cómo se
 aplican las actualizaciones de software?, ¿poco a poco o con grandes
@@ -137,6 +145,8 @@ El esquema inicial que pensaríamos para proporcionar estas tres
 aplicaciones sería una máquina (física o virtual) en la que
 instalaríamos el servidor web, los servidores de aplicaciones (php,
 java, ...), el servidor de bases de datos, etc... tal y como aparece en la siguiente imagen:
+            
+            ---
 
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso1.png" alt="paso1" />
             
@@ -151,11 +161,17 @@ datos en el mismo equipo que el servidor web es totalmente inadecuado,
 ya que el servidor web, por su propia naturaleza debe permitir que
 cualquier usuario acceda desde Internet y una vulnerabilidad en este
 equipo podría exponer los datos que se ubican en las bases de datos a
-un potencial atacante. Además, desde el punto de vista del rendimiento
+un potencial atacante.
+            
+            ---
+            
+Además, desde el punto de vista del rendimiento
 y la disponibilidad, separar los servicios en diferentes equipos hace
 que no haya interacciones entre ellos y no compitan por los mismos
 recursos.
 
+            ---
+            
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso2.png" alt="paso2" />
             
             ---
@@ -167,14 +183,23 @@ recursos.
 El coste computacional mayor en una aplicación web suele recaer en los
 servidores de aplicaciones, que son los que ejecutan código complejo, mientras que el servidor web se limita a servir el contenido generado
 por estos servidores de aplicaciones o los ficheros estáticos del
-sitio web. Al servir tres aplicaciones web diferentes desde el mismo
+sitio web. 
+
+            ---
+            
+Al servir tres aplicaciones web diferentes desde el mismo
 equipo, podemos tener importantes interacciones entre ellas y que un
 aumento de uso de una aplicación, repercuta negativamente en las
-otras. Es por esto, por lo que se puede separar estos servidores de
+otras. 
+            ---
+            
+            Es por esto, por lo que se puede separar estos servidores de
 aplicación en equipos dedicados para cada una de ellas. La función del
 servidor web en este caso, se acerca más a la de un proxy inverso, que
 pasa la petición web a un equipo interno (el servidor de
 aplicaciones).
+            
+            ---
 
 <img src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso3.png" alt="paso3" />
             
@@ -186,14 +211,24 @@ aplicaciones).
 
 Los servidores de aplicaciones consultan continuamente a los
 servidores de bases de datos y cada consulta conlleva un importante
-coste computacional y una ralentización de la respuesta. Si la misma
+coste computacional y una ralentización de la respuesta. 
+            
+            ---
+            
+            Si la misma
 consulta ya se ha realizado antes, se puede acelerar mucho la
 velocidad de respuesta con menor coste computacional utilizando un
 servicio de caché SQL, de manera que los servidores de aplicaciones se
 configuran para consultar al servidor caché, que servirá directamente
 la respuesta si ya lo ha hecho anteriormente, o consultará al servidor
-de bases de datos en caso necesario. Memcached o redis son dos
+de bases de datos en caso necesario. 
+            
+            ---
+            
+            Memcached o redis son dos
 opciones muy utilizadas como caché SQL.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso4.png"
@@ -207,11 +242,17 @@ alt="paso4" />
 
 Al igual que se puede cachear la respuesta del servidor de bases de
 datos, se puede hacer lo mismo con la del servidor de aplicaciones o
-el servidor web. Dependiendo del servidor de aplicaciones, se puede
+el servidor web. 
+            
+            ---
+            
+            Dependiendo del servidor de aplicaciones, se puede
 ubicar este componente delante del servidor web o entre éste y el
 servidor de aplicaciones. Dicho de otro modo, podemos cachear http o
 algún otro protocolo como CGI, WSGI, etc. Un software muy conocido de
 caché http es varnish.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso5.png"
@@ -225,12 +266,18 @@ alt="paso5" />
 
 Si la demanda de alguna de las aplicaciones varía de forma importante,
 se puede utilizar escalado horizontal, aumentando el número de nodos
-de estos servidores de aplicaciones a la demanda de cada momento. Esto
+de estos servidores de aplicaciones a la demanda de cada momento.
+            
+            ---
+            
+            Esto
 conlleva dos importantes modificaciones, el almacenamiento entre los
 servidores de aplicación de la misma aplicación tiene que estar
 distribuido de forma que garantice el uso concurrente y se deben
 repartir las peticiones a los diferentes servidores de aplicación a
 través de un balanceador de carga.
+            
+            ---
             
 
 <img
@@ -248,6 +295,8 @@ aplicaciones, sino que si queremos ofrecer realmente alta
 disponibilidad en todos los niveles, debemos crear una arquitectura en
 la que la disponibilidad nunca dependa de uno solo nodo y el sistema
 pueda responder siempre ante incidencias puntuales en cualquier nivel.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso7.png"
@@ -288,6 +337,8 @@ Al ofrecer microservicios no podemos tener dependencia de un solo
 nodo, por lo que al igual que en los pasos anteriores, se debe ofrecer
 la posibilidad de escalar cualquier componente a la demanda y que el
 sistema globalmente pueda responder ante cualquier error puntual.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso9.png"
@@ -296,10 +347,14 @@ alt="paso9" />
             ---
 
 ### Paso 10. Microservicios en todas las aplicaciones
+            
+            ---
 
 En lugar de utilizar microservicios en una aplicación, podríamos
 utilizarlos en todas, pero manteniendo los componentes auxiliares
 gestionados aparte.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso10.png"
@@ -311,6 +366,8 @@ alt="paso10" />
 
 O podríamos tener todo definido internamente en microservicios, tanto
 los componentes de cada aplicación, como los componentes auxiliares.
+            
+            ---
 
 <img
 src="https://github.com/iesgn/curso_kubernetes_cep/raw/main/modulo1/img/paso11.png"
@@ -319,6 +376,8 @@ alt="paso11" />
             ---
 
 ## Contenedores
+            
+            ---
 
 En parte por lo que hemos explicado aquí, y en parte por las ventajas
 que proporciona en el desarrollo de software y en el rápido
