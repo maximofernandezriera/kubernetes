@@ -469,31 +469,45 @@ docker.
             
 Los cambios más significativos que han ocurrido en docker se enumeran
 a continuación:
+            
+            ---
 
 * [Moby](https://github.com/moby/moby) Docker engine se desarrolla
   ahora como proyecto de software libre independiente de Docker Inc. denominándose Moby. De este proyecto se surten las distribuciones de
   linux para desarrollar los paquetes docker.io
+            
+            ---
 
 * [Docker Engine](https://www.docker.com/products/container-runtime)
   Versión desarrollada por Docker Inc.
+            
+            ---
 
 * [runC](https://github.com/opencontainers/runc) Componente que
   ejecuta los contenedores a bajo nivel. Actualmente desarrollado por
   OCI
+            
+            ---
 
 * [containerd](https://github.com/containerd/containerd) Componente
   que ejecuta los contenedores e interactúa con las
   imágenes. Actualmente desarrollado por la CNCF.
+            
+            ---
 
 ## Limitaciones de docker (docker engine)
 
 Docker (docker engine) gestiona completamente la ejecución de un
 contenedor en un determinado nodo a partir de una imagen, pero no
 proporciona toda la funcionalidad que necesitamos para ejecutar
-aplicaciones en entornos en producción. 
+aplicaciones en entornos en producción.
+            
+            ---
 
 Existen diferentes preguntas
 que nos podemos hacer acerca de esto :
+            
+            ---
 
 * ¿Qué hacemos con los cambios entre versiones?
 * ¿Cómo hacemos los cambios en producción?
@@ -505,6 +519,8 @@ interrupción?
 * ¿Se puede variar a demanda el número de réplicas de un determinado
 contenedor?
 * ¿Es posible mover la carga entre diferentes nodos?
+            
+            ---
 
 Las respuestas a estas preguntas no pueden venir de docker engine, ya
 que no es un software desarrollado para eso, tiene que venir de algún software
@@ -513,9 +529,6 @@ múltiples nodos para proporcionar de forma coordinada estas
 funcionalidades. Ese software se conoce de forma genérica como
 **orquestador de contenedores**.
 
-## Vídeo
-
-[https://www.youtube.com/watch?v=UdPsknw30OE](https://www.youtube.com/watch?v=UdPsknw30OE)
 
           </textarea>
         </section>
